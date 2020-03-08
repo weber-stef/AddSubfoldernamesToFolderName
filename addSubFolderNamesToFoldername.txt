@@ -25,4 +25,42 @@ for dir in */; do
 DIR=$dir;
 TRIMMED=$(echo $DIR | sed 's:/*$::')
  printf '%s-' $TRIMMED > "$DIR/main.txt";
+
  done
+
+find . -type f -name "main.txt" -exec rm -f {} \;
+
+#!/bin/bash
+
+for dir in */; do
+DIR=$dir;
+TRIMMED=$(echo $DIR | sed 's:/*$::')
+ printf '%s-' $TRIMMED > "$DIR/main.txt";
+for SUB in `find . -mindepth 2 -maxdepth 2 -type d`; do
+SUBTRIMMED=$(echo $SUB | sed 's:/*$::');
+ printf '%s-' $SUBTRIMMED > "$DIR/$SUBTRIMMED/main.txt";
+done
+done
+
+for dir in */; do
+DIR=$dir;
+TRIMMED=$(echo $DIR | sed 's:/*$::')
+ printf '%s-' $TRIMMED > "$DIR/main.txt";
+
+
+for SUB in `find . -maxdepth 1 -type d`; do
+cd $SUB | ls -l | grep ^d | awk '{print $9}' | sed '$!N;s/\n/./' >> $DIR/main.txt
+done
+done
+
+find . -type d -path './*/*' -prune -print
+
+shopt -s globstar
+for d in ./*/*; do printf "%s\n" ${d##*/}; done
+
+printf '%s\n' */ | awk '{print $8,$9}'
+
+for SUB in `find . -mindepth 2 -maxdepth 2 -type d`; do
+#cd $SUB | ls -l | grep ^d | awk '{print $9}'
+echo $SUB;
+done
