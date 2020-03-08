@@ -1,0 +1,28 @@
+# write foldernameto main.txt, followed by a minus-sign
+printf '%s-' "${PWD##*/}" > main.txt
+# add subfolders to main.txt, seperated by dots
+ls -l | grep ^d | awk '{print $9}' | sed '$!N;s/\n/./' >> main.txt
+
+
+find . -maxdepth 1 -type d -exec echo {} \;
+
+find . -maxdepth 1 -type d -exec {printf '%s-' "${PWD##*/}" > main.txt } \;
+
+find . -maxdepth 1 -mindepth 1 -type d | while read dir; do
+printf '%s-' "${PWD##*/}" > main.txt
+done
+
+for dir in */; do
+  ls > ./main.txt
+done
+
+for directory in $(find ./ -maxdepth 1 -type d); 
+do
+    echo "$directory" > dirs.txt; 
+done
+
+for dir in */; do
+DIR=$dir;
+TRIMMED=$(echo $DIR | sed 's:/*$::')
+ printf '%s-' $TRIMMED > "$DIR/main.txt";
+ done
